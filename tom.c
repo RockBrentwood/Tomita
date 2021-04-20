@@ -601,7 +601,7 @@ void AddN(unsigned N, unsigned W) {
    Node Nd = &NodeTab[N]; State S = Next(VertTab[W].Val, Nd->Sym);
    Vertex W1; unsigned Z; ZNode Z1; int I;
    if (S == 0) return;
-   W1 = &VertTab[AddQ(S)];
+   unsigned Q = AddQ(S); W1 = &VertTab[Q]; //(@) These two cannot be combined, since VertTab[] can change during AddQ().
    for (Z = 0; Z < W1->Size; Z++) {
       Z1 = W1->List[Z];
       if (Z1->Val == N) break;

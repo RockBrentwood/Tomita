@@ -3,8 +3,8 @@ CC = gcc
 #CC = qcl
  
 # OBJECT FILE SUFFIX
-O = o
-#O = obj
+O = .o
+#O = .obj
  
 # EXECUTABLE FILE SUFFIX
 X =
@@ -13,5 +13,5 @@ X =
 ### End of user definitions
  
 all:	tom$X
-tom$X:	tom.$O
-	$(CC) -o tom tom.$O
+tom$X:	tom$O
+	$(CC) -o tom tom$O
