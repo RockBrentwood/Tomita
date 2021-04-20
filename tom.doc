@@ -1,0 +1,185 @@
+               tom -- A Demo for the Tomita Parsing Algorithm
+
+(0) Introduction
+   This is a free demo for the Tomita Parsing algorithm.  It is released to the
+public domain free of any restrictions.  You may use it for any purpose as you
+see fit.
+
+(1) Command line arguments
+   The command line has the following format:
+
+                      tom -c -s grammar
+
+The listed file, "grammar", should contain a grammar listed in a form suitable
+for processing by the parser generator.  The options, -s and -c, if you use
+them, will have the following effects:
+
+         -c Writes the LR(0) parsing tables for the grammar file
+            to standard output.
+
+         -s Displays the parsing stack of each parse to standard output.
+
+Parses are accepted from standard input and the results are displayed to
+standard output.
+
+Example:
+                      tom -s gram0 <in >out
+
+will process the grammar listed in "gram0", read input from "in" and produce
+a listing of the parse results and parse stacks to the file "out".
+
+(2) Grammars
+   The file gram0 contains a small demo grammar.  In it, you will see rules
+of the following types:
+
+             (1) Productions, e.g.,
+                     NP = d n | NP PP.
+
+             (2) Lexical Classificatiom Rules, e.g.
+                     p: in with.
+
+             (3) Start Symbol Declaration
+                     * S.
+
+Also, as a special case of (2), one can list a rule such as:
+
+                       d.
+
+which is equated to the lexical rule:
+
+                     d: "d".
+
+Items may be enclosed in double quotes, and MUST be if they consist of any
+symbols other than the alphanumeric symbols, or if they start in a digit.
+
+   A Start Symbol can only be declared once, and if it is not declared
+then the symbol on the left-hand side of the first rule in the grammar file
+will be treated as the start symbol.
+
+   The entries on the right hand side of lexical classification rules are
+treated as literals.  These are the actual items that the parser will expect
+to see when parsing an input.  They are distinct from the other parsing
+symbols so that for instance if one has a rule such as:
+
+                 with = with1 | with2.
+
+this "with" is treated as a distinct item.
+
+   To avoid confusion, avoid using the same names for lexical entries and
+parsing symbols.
+
+(3) Input Format
+   Input is assumed to consist of a list of items separated by spaces, all
+in the same line.  Each line is treated as a separate entry for the parser.
+If you are using the parser in the interactive mode, then typing an empty
+line will end the program.
+
+   Sample files are included with this program.
+
+(4) Output Format
+   (a) Parsing Tables
+   With the -c option, the LR(0) parsing table will be listed in standard
+output before parsing the input.  The reason for this option is that the
+parsing stack makes reference to parsing states, so this listing is provided
+a as cross-reference.  The parsing table for the file gram0 is listed in
+gram0.tab.  The listing consists of the following:
+
+State:
+	list of items
+        ...
+
+For example, the start state (state 0) in gram0.tab is listed as:
+
+0:
+	S => 1
+	NP => 2
+	d => 3
+
+Items can be of any of the following forms examplified by excerpts from
+gram0.tab:
+
+      (i) ACCEPT
+      1:
+	      accept
+
+This indicates that state 1 is the accepting state of the LR(0) parser.  The
+accepting state will always be state 1.
+
+      (ii) SHIFTS and GOTOS
+      3:
+	      n => 8
+
+This example indicates a shift (or goto) on item "n" from state 3 to state 8.
+The difference between shifts and gotos in LR(k) parsing has no bearing on
+the software here, so they are listed in a common format.
+
+      (iii) REDUCTIONS
+      4:
+	      [NP -> NP PP]
+
+This indicates that in state 4, a reduction action may be applied whereby the
+last two items on the parsing stack (which will always be nodes of types PP
+and NP) are to be combined into a new node of type NP.  A goto on the item NP
+is then executed from the state located two levels back in the stack to a
+new state.
+
+   (b) Parsing Stack
+   The output corresponding to the file "in" (processed using grammar gram0),
+is listed in "out".  Included in this listing is the following listing of the
+parsing stack:
+
+Parse Stack:
+ v_0_0
+ v_1_3 <=	 [ d_0_1 ] <= v_0_0
+ v_2_8 <=	 [ n_1_2 ] <= v_1_3
+ v_2_2 <=	 [ NP_0_2 ] <= v_0_0
+ v_3_7 <=	 [ v_2_3 ] <= v_2_2
+ v_4_3 <=	 [ d_3_4 ] <= v_3_7
+ v_5_8 <=	 [ n_4_5 ] <= v_4_3
+ v_5_11 <=	 [ NP_3_5 ] <= v_3_7
+ v_5_5 <=	 [ VP_2_5 ] <= v_2_2
+ v_5_1 <=	 [ S_0_5 ] <= v_0_0
+
+The stack is actually a graph consisting of nodes labeled v_N_S, and with edges
+labeled by nodes of the form [ X_M_N ].  All connections are of the form:
+
+                 v_N_T  <=	 [ X_M_N ] <= v_M_S1  v_M_S2 ...
+
+and the following properties will always hold:
+
+              (a) SHIFT(S1, X) = SHIFT(S2, X) = ... = T
+              (b) M <= N.
+
+The meaning of the labels are as follows:
+
+                  v_N_S: N = the parsing position in the input.
+                         S = the parsing state.
+                  X_M_N: X = the parsing item.
+                         M, N = the start and end positions
+                                of the item in the input.
+
+If the input is labeled as follows:
+
+0   1   2   3   4    5
+ the boy saw the girl
+
+then the edge:
+                     v_5_11 <=	 [ NP_3_5 ] <= v_3_7
+
+indicates that the parser went from state 7 at position 3 to state 11 at
+position 5 by shifting an item of type NP parsed from the items: "the girl".
+More than one edge may be labeled with the same node.
+
+   (b) Parse Forest
+   Also in the file "out" is the parse forest corresponding to the input:
+
+                          the boy saw the girl
+
+processed with grammar gram0.  This forest is listed in equational form as a
+grammar which can even be input to the parser as a grammar, itself.  This
+grammar is characterized as the largest sub-grammar of the input grammar
+that generates the one element set { the input }.
+
+   What this illustrates, among other things, is that this algorithm is
+actually a special case of a more general algorithm that computes the
+intersection of a context free grammar with a regular grammar.

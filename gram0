@@ -1,0 +1,9 @@
+NP = d n | NP PP.
+VP = v NP | VP PP.
+PP = p NP.
+S = NP VP.
+* S.
+d: the a.
+p: in with.
+n: girl boy park telescope saw.
+v: saw.

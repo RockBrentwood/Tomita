@@ -1,0 +1,4 @@
+NP = d IP | IP.
+IP = AP IP | n.
+AP = AP a | .
+d. a. n.

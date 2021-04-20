@@ -1,0 +1,263 @@
+      The Tomita Parsing Algorithm (LR(k) with Dynamic Programming)
+
+   A while back (1985) a researcher at CMU, named Masaru Tomita, came out with
+a small book describing his unique approach to natural language parsing.  The
+approach involved the combination of several distinctive features:
+
+       (1) The parser was LR(k)-based.
+       (2) A compact representation of all possible parses of the given input
+           was returned by the parser.
+       (3) Breadth-first search was used to handle non-determinism, and
+           the parser's stack was generalized into a graph.
+       (4) It reduces to LR(k) parsing when the grammar is LR(k).
+
+Limitations that were pointed out in the 1985 book (inability to handle
+grammars with rules like; S -> S) can be eliminated if the algorithm is
+viewed correctly as a dynamic programming algorithm.  This is what I am about
+to describe below.
+
+   A software demo (in C) of the parser is available at the FTP site
+csd4.csd.uwm.edu in the directory /pub/regex/tomita.
+
+   I haven't been in touch with any of Tomita's later works, so this may be
+current or probably even in advance of current.  But I think it's of
+sufficient interest to present here.
+
+THE PARSE FOREST (Example 1):
+   The best way to explain the approach is to look at an example or two.
+For the first example, take the following grammar (presented in the equational
+form accepted by the demo software):
+
+                       S = NP VP.
+                       VP = V NP | VP PP.
+                       NP = D N | NP PP.
+                       PP = P NP.
+                       D: the a an.
+                       N: boy girl park saw.
+                       P: in at.
+                       V: saw.
+
+Suppose it were desired to parse the following sentence using this grammar:
+
+                  The boy saw a girl in the park.
+
+First, label the sentence as follows:
+
+                 0   1   2   3 4    5  6   7    8
+                  The boy saw a girl in the park.
+
+The primary function of the LR(k) parsing automaton is to limit the search to
+for the possible parses.  The grammar above will have been precompiled to a
+LR(k) parsing table.  I won't go into this in any more detail, but will note
+that by the time the word "saw" is reached, the parser will only have entries
+in the table for a word of type P or V.  Therefore, "saw" will be correctly
+recognized a as word of of type V.
+
+   The parser will build up a compact representation of all the possible
+parses of this input.  This representation can be characterized as:
+
+            The largest subset, G, of the grammar
+            such that L(G) = { the input }.
+
+in particular as the following:
+
+                   D_01: The.
+
+                   N_12: boy.
+                   NP_02 = D_01 N_12.
+
+                   V_23: saw.
+
+                   D_34: a.
+
+                   N_45: girl.
+                   NP_35 = D_34 N_45.
+                   VP_25 = V_23 NP_35.
+
+                   P_56: in.
+
+                   D_67: the.
+
+                   N_78: park.
+                   NP_68 = D_67 N_78.
+                   PP_58 = P_56 NP_68.
+                   NP_38 = NP_35 PP_58.
+                   VP_28 = V_23 NP_38 | VP_25 PP_58.
+                   S_08 = NP_02 VP_28.
+
+The listing here is also meant to show the order in which each of the items
+are created.  As you can see, the parsing process is inherently left-to-right.
+Because of this, it is also feasible to implement the algorithm in such a way
+that the parser's actions are reversible.  To undo a word, one merely needs
+to erase all the items created at and after the word.  For instance, if the
+word "park" were to be erased, then all the nodes N_78 through S_08 would be
+erased.
+
+   Generally, this list would be represented in graphical form as a "parse
+forest".  The root of the forest would be S_08.  Each of the equations above
+indicates a node in the forest.  For instance, S_08 = NP_02 VP_28 indicates
+that S_08 branches off to NP_02 VP_28.  Each of the lexical items listed
+(e.g. N_78: park) indicates a leaf.  As an exercise you may want to diagram
+the list presented above.
+
+   Of particular interest here is the item VP_28.  It has two branchings listed
+under it, corresponding to the ambiguity:
+
+        saw (the girl in the park)   vs   (saw the girl) in the park.
+
+In Tomita's (1985) terminology, VP_28 is called a Packed Node, and each of the
+branchings is called a Subnode.  What makes the storage efficient is precisely
+that this node is only presented once as a single unity to its parent node(s)
+S_08.  In other words, ambiguities are localized as much as possible.
+
+   The basic application of this idea is that when the parse is complete, and
+the semantic evaluation is applied disambiguation can be carried out more
+efficiently by pruning subnodes.  (Unfortinately, semantic constraints such as
+agreement rules will require unpacking packed nodes before applying the pruning
+operation).
+
+   Because of the indexing, it is not too difficult to see that the maximum
+number of nodes that will be created by ANY parse using the Tomita algorithm
+will be proportional to N^2, where N is the size of the input (8 above).
+Each node will have up to N^(k-1) subnodes, where k is the maximum length of
+a production, leading to a storage efficiency proportional to N^(k+1).  For
+binary grammars (all rules of the form N -> (empty), N -> N', N -> N' N''),
+k is 2, and the storage reduces to N^3.
+
+THE GRAPH-STRUCTURED PARSING STACK:
+   Assuming that the LR(k) parsing table has states numbered 0, 1, ..., Q-1
+(Q = 12 for the grammar in Example 1), where 0 is the starting state, the
+parsing stack for the sentence above will have layers numbered 0, 1, ..., 8.
+Each layer, L, will consist of at most one vertex, v(L, S) for each of the
+states S = 0, ..., Q-1.  Layer 0 will have only one vertex: v(0, 0).
+
+   Because of the way LR(k) parsing is defined, there can only be at most
+one transition between two given states, e.g. 0 S |- 1, 0 NP |- 2, 0 D |- 3.
+Therefore, between any two vertices of the graph will lie at most ONE edge
+labeled by ONE node, e.g.
+
+                              D_01
+                    v(0, 0) ---------> v(1, 3)
+
+In general for any transition s1 X |- s2, and any pair of vertices v(l, s1),
+v(m, s2) (l <= m) will lie at most one edge labeled as follows:
+
+                              X_lm
+                   v(l, q1) ---------> v(m, q2)
+
+   Tomita's implementation of the graph structured stack also goes one step
+further and represents the labels themselves as nodes, e.g.:
+
+                 v(0, 0) --- [D_01] -----> v(1, 3)
+
+and allows for branches to be merged, e.g.,
+
+                          P_56
+               v(5, 10) ----------> v(6, 7)
+                               /
+               v(5, 4)  -----/
+                          P_56
+
+becomes:
+               v(5, 10) --- [P_56] ----> v(6, 7)
+                            /
+               v(5, 4)  --/
+
+   Like with the parse forest, the labeling of the nodes makes the storage
+efficiency immediately apparent: the number of v(N, S) nodes in the graph will
+be proportional to N (actually, N Q, but Q is fixed), and the number of edge
+and labels is proportional to N^2.
+
+THE PARSING ALGORITHM:
+   The basic feature is that parsing is done breadth-first.  When lexical
+item X_(m-1)m is input, then all possible nodes of the form X_nm will be
+created under the direction of the LR(k) parsing table.  This may possible
+lead to more vertices v(m, s) as a result.
+
+   In particular, in the LR(k) parsing automaton, all REDUCE actions are
+carried out any SHIFT action.  This will assure that the parses being carried
+out in parallel will all be synchronized to the most recently processed
+lexical items.
+
+   This is an outline of the algorithm:
+
+(0) create vertex v(0, 0), L = 0.
+(1) apply all possible REDUCE actions over the current set of vertices v(L, S).
+    this may lead to:
+       (a) the creation of new vertices
+       (b) the creation of new nodes and edges of the form:
+                    ...---> [X_ml] ---> v(L, S)
+           to currently existing vertices.
+
+   Both cases, as a result, may lead to the applicability of more REDUCE
+   actions, even in case (b) if the vertex was already there.  Carry out this
+   process until all the REDUCE actions are exhausted.
+
+(2) if L = N, the parsing is complete, go to step (5)
+(3) input the next lexical item.  For all possible classes, X, that this item
+    belongs to (e.g., saw is an item of types N and V), carry out all the SHIFT
+    actions from all the vertices v(L, S).  This will result in the creation
+    of new vertices of the form v(L + 1, S').
+
+    If the parsing process fails, it will fail at this point due to the lack
+    of any applicable shift action.  Tomita described an interactive front-end
+    in which the recovery action consisted in undoing the parse action and
+    prompting the user for a correction.
+
+(4) increase L by 1 and go to step (1).
+
+(5) if parsing succeeds, there will be exactly one edge of the form:
+
+             v(0, 0) ----- [S_0N] ------> v(N, 1)
+
+    where I am assuming that state 1 of the LR(k) parser is the accepting
+    state.  The node S_0N is then returned as the result of the parse.
+
+HANDLING PATHOLOGICAL GRAMMARS (Example 2):
+   This is a rather generic example used to show what happens in the extreme
+case where cyclic rules and empty reduction rules occur.
+
+                   S = | S T | S.
+                   T = a S b | x.
+                   a: "(".
+                   b: ")".
+                   x: "a" "b" "c" "d".
+
+In this case, S has both an empty reduction S -> (empty string), and a
+cyclic reduction S -> S.
+
+   Taking the following input as an example:
+
+                   0 1 2 3 4 5 6
+                    a ( b c ) d
+
+The result of parsing this will be a CYCLIC parse forest (rooted at S_06):
+
+             S_00 = S_00 | .
+
+             x_01: "a".
+             T_01 = x_01.
+             S_01 = S_01 | S_00 T_01.
+
+             a_12: "(".
+             S_22 = S_22 | .
+
+             x_23: "b".
+             T_23 = x_23.
+             S_23 = S_23 | S_22 T_23.
+
+             x_34: "c".
+             T_34 = x_34.
+             S_24 = S_24 | S_23 T_34.
+
+             b_45: ")".
+             T_15 = a_12 S_24 b_45.
+             S_05 = S_05 | S_01 T_15.
+
+             x_56: "d".
+             T_56 = x_56.
+             S_06 = S_06 | S_05 T_56.
+
+Nobody's ever going to use a grammar like this, but it illustrates the
+generality of the parsing algorithm, which was originally intended as only
+a slight generalization of LR(k) parsing when it was discovered in 1985.
