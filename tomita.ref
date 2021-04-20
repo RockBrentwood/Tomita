@@ -19,10 +19,6 @@ to describe below.
    A software demo (in C) of the parser is available at the FTP site
 csd4.csd.uwm.edu in the directory /pub/regex/tomita.
 
-   I haven't been in touch with any of Tomita's later works, so this may be
-current or probably even in advance of current.  But I think it's of
-sufficient interest to present here.
-
 THE PARSE FOREST (Example 1):
    The best way to explain the approach is to look at an example or two.
 For the first example, take the following grammar (presented in the equational
@@ -171,12 +167,12 @@ and labels is proportional to N^2.
 THE PARSING ALGORITHM:
    The basic feature is that parsing is done breadth-first.  When lexical
 item X_(m-1)m is input, then all possible nodes of the form X_nm will be
-created under the direction of the LR(k) parsing table.  This may possible
+created under the direction of the LR(k) parsing table.  This may possibly
 lead to more vertices v(m, s) as a result.
 
    In particular, in the LR(k) parsing automaton, all REDUCE actions are
-carried out any SHIFT action.  This will assure that the parses being carried
-out in parallel will all be synchronized to the most recently processed
+carried out before any SHIFT action.  This will assure that the parses being
+carried out in parallel will all be synchronized to the most recently processed
 lexical items.
 
    This is an outline of the algorithm:

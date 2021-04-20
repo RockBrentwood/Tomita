@@ -1,0 +1,12 @@
+Kluwer '91, _Generalized LR Parsing_, Tomita ed., 0-7923-9201-9
+
+This book started out as part of the proceedings of the 1st int'l
+workshop on parsing technologies in '89 and then grew. It contains
+some performance studies, some related algorithms, and 2 fixes to
+Tomita: one reduces (or claims to reduce) the time bound to O(n^3)
+regardless of the grammar - the original version was O(n^k) where k is
+the length of the longest production, I think; one is a treatment of
+cyclicity and so on. I'm not positive they're compatible; the book
+arrived as I ended that project so it got read but not closely.
+
+stephen

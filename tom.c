@@ -4,9 +4,8 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-/* Some compilers (such as gcc on the SUN) require this:
+/* Some compilers (such as gcc on the SUN) require this: */
 #define realloc(X, N) ((X) == 0? malloc(N): realloc((X), (N)))
- */
 
 /* An implementation of the Tomita Parsing Algorithm, using LR(0) parsing.
    Suggested modifications:
@@ -20,7 +19,7 @@
  */
 
 /* LR(0) PARSER GENERATOR */
-/* Input format derived from the syntax:
+/* Input format derived from the following syntax:
    Grammar = Rule+.
    Rule = "*" ID "." |
           ID "." |
@@ -100,6 +99,24 @@ Lexical LEX(void) {
 
 /* DATA STRUCTURES */
 typedef unsigned char byte;
+
+/* A literal symbol, L, has the following format:
+      Literal = 1
+      RList[0], ... RList[Rules-1] -- the categories L belongs to.
+      RList[i][0] = L's i'th category.
+   If Rules == 0, if L is of unknown category.
+
+   A non-terminal symbol, S, has the following format:
+      Literal = 0
+      RList[i] = { a1, ..., an, NULL } if S -> a1 ... an
+
+   RList is a dynamic array, growing 8 items at a time.
+
+   Symbols are hashed into HashTab, linked by the Next pointer.
+   They are listed in the order they are encountered in FirstB..LastB,
+   linked by the Tail pointer.
+ */  
+
 typedef struct Symbol *Symbol;
 typedef Symbol *Rule;
 struct Symbol {
@@ -227,6 +244,12 @@ void Check(void) {
    if (ERRORS > 0) printf("Aborted.\n"), exit(1);
 }
 
+/* Item: LHS -> RHS[0] ... RHS[n-1] $ RHS[n] ... RHS[p-1] NULL
+         Pos == &RHS[n], 0 <= n <= p
+   Items: { List[0], List[1], ..., List[Size-1] }
+          Pre is the accessing symbol in the itemset construction,
+          or NULL for the initial item.
+ */
 typedef struct Item { Symbol LHS, *RHS, *Pos; } *Item;
 typedef struct Items { Symbol Pre; int Size; Item *List; } *Items;
 
@@ -254,6 +277,14 @@ typedef struct Reduce *Reduce;
 typedef struct Shift *Shift;
 typedef struct State *State;
 
+/* A state, Q, has the format:
+   Q = Final + x0 Q0 + ... x(Ss-1) Q(Ss-1)
+     + E0 + ... E(Es-1) + R0 + ... R(Rs-1)
+  SList[i] = { xi, Qi },
+  EList[i] = E(i) = { LHS -> 1 },
+  RList[i] = R(i) = { LHS -> x1 ... xq }, RHS = { x1, ..., xq, NULL }, q >= 1
+  Final = 1 if Q is an accepting state (state 1), 0 else.
+ */
 struct Reduce { Symbol LHS, *RHS; };
 struct Shift { Symbol X; int Q; };
 struct State {
@@ -413,6 +444,17 @@ Symbol GetC(void) {
    return Sym = LookUp(LastW, 1);
 }
 
+/* Node format:
+      Node: Sym ->* x(Start)..x(Start+Size)
+            where x(i) = i'th input.
+      Node = Sub[0] + Sub[1] + ... + Sub[Subs-1]
+   Subnode format:
+      Links: reference count.
+      Sub ->* x(Start)..x(Start+Size)
+      Sub = N0 N1 ... N(k-1)
+            Ni = &NodeTab[Sub (->Next)^i ->Cur]
+            Sub (->Next)^k == NULL
+  */
 typedef struct Node *Node;
 typedef struct Subnode *Subnode;
 struct Node { Symbol Sym; unsigned Start, Size, Subs; Subnode *Sub; };
@@ -487,6 +529,15 @@ unsigned AddSub(Symbol L, Subnode P) {
    return N;
 }
 
+/* ZNode format: { v(0), ... v(Size-1) <- [N]
+      v(i) = &VertTab[List[i]]
+      N = &NodeTab[Val]
+   Vertex:
+      z0, ..., z(Size-1) <- vq_n
+      z(i) = &NodeTab[List[i]]    z(i) ->* x(mi) ... x(n)
+      Val = state q
+      Start = n
+ */
 typedef struct ZNode *ZNode;
 typedef struct Vertex *Vertex;
 struct ZNode { unsigned Val; unsigned Size, *List; };
@@ -575,6 +626,9 @@ void AddN(unsigned N, unsigned W) {
    }
 }
 
+/* Subnode structure reused for breadth-first search paths.
+   Path =    Z <------ P = { [n1] <-- ... <-- [nk] }
+ */
 typedef struct Path *Path;
 struct Path { ZNode Z; Subnode P; };
 Path PathTab; unsigned PathE, PathP;

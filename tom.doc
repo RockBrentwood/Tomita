@@ -70,7 +70,7 @@ parsing symbols.
 
 (3) Input Format
    Input is assumed to consist of a list of items separated by spaces, all
-in the same line.  Each line is treated as a separate entry for the parser.
+in the same line.  Rach line is treated as a separate entry for the parser.
 If you are using the parser in the interactive mode, then typing an empty
 line will end the program.
 
@@ -81,7 +81,7 @@ line will end the program.
    With the -c option, the LR(0) parsing table will be listed in standard
 output before parsing the input.  The reason for this option is that the
 parsing stack makes reference to parsing states, so this listing is provided
-a as cross-reference.  The parsing table for the file gram0 is listed in
+as a cross-reference.  The parsing table for the file gram0 is listed in
 gram0.tab.  The listing consists of the following:
 
 State:
@@ -178,7 +178,9 @@ More than one edge may be labeled with the same node.
 processed with grammar gram0.  This forest is listed in equational form as a
 grammar which can even be input to the parser as a grammar, itself.  This
 grammar is characterized as the largest sub-grammar of the input grammar
-that generates the one element set { the input }.
+that generates the one element set { the input }.  In fact, if this grammar
+is used to parse the same input, the result will be the same parse forest and
+parse stack, except for relabeling the nodes and vertices.
 
    What this illustrates, among other things, is that this algorithm is
 actually a special case of a more general algorithm that computes the

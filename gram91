@@ -1,0 +1,10 @@
+* S.
+S = NP VP | S PP | S and S.
+NP = det n | n | NP PP | NP and NP.
+VP = v NP | v S.
+PP = p NP.
+and.
+det: the a.
+p: with.
+n: I Jane Jack man telescope.
+v: saw hit.

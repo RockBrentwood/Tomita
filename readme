@@ -5,7 +5,8 @@ however, was written from scratch between 5/20/93 and 5/23/93.
 
    Possible extensions to this include higher LR(k) parsing ability,
 incremental parsing table generation, optimization, table-packing,
-actions/disambiguation rules, lexical rules, etc.
+actions/disambiguation rules, lexical rules, etc.  Another possibility is
+the incorporation of Quantum Parsing.
 
    This implementation of the Tomita Algorithm has not been formally verified
 with respect to cyclic grammars, but hours of searching for counter-examples
@@ -19,11 +20,14 @@ Makefile, if necessary, and compile by typing "make".
                 The source code ......... Makefile tom.c
                 Documentation ........... tom.doc readme
                 The Algorithm ........... tomita.ref
-                Sample grammars ......... gram0 gram1 gram2 gram3
+                Sample grammars ......... gram0 gram1 gram2 gram3 gram91
                 Sample parsing table .... gram0.tab
                 Sample input & output ... in out
 
-The file gram0.tab was created with the command line:
+The reference, tomita.ref, may also be found in the comp.compilers archives
+from May 1993.
+
+   The file gram0.tab was created with the command line:
 
                    tom -c gram0 >gram0.tab
 
