@@ -1,7 +1,12 @@
-1993:	1993/05/23
-	Released 1993/08/18
-	http://www.cs.cmu.edu/~gap/junk/
-	https://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/parsing/tom/
-	https://compilers.iecc.com/comparch/article/93-05-108
-1994:	Released 1994/02/20
-	https://staff.csie.ncu.edu.tw/chia/Course/Compiler/lexparse.html
+1993/05/23	Internal release
+1993/08/18	1993 version
+		http://www.cs.cmu.edu/~gap/junk/
+		https://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/parsing/tom/
+		https://compilers.iecc.com/comparch/article/93-05-108
+1994/02/20	1994 version
+		https://staff.csie.ncu.edu.tw/chia/Course/Compiler/lexparse.html
+2001/10/20	Reverted gram3 back to the 1993 version
+		Combined readme and tom.doc, integrating readme into section (9) of tom.doc and renamed the result README.
+		Renamed book Refs.txt and added the (1994) comp.compilers link to it.
+		Minor changes to tom.c (removing unused variables).
+		Renamed tomita.ref tomita.txt and changed README to reflect this.

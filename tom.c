@@ -429,7 +429,7 @@ void SHOW_STATES(void) {
 /* TOMITA PARSER */
 unsigned Position;
 Symbol GetC(void) {
-   int Ch; Symbol Sym;
+   int Ch;
    do Ch = GET(); while (Ch == ' ' || Ch == '\t');
    if (Ch == '\n' || Ch == EOF) return 0;
    for (LastW = ChP; Ch != EOF && !isspace(Ch); ChP++) {
@@ -441,7 +441,7 @@ Symbol GetC(void) {
    if (ChP - ChArr == MAX_CHAR) printf("Out of character space.\n"), exit(1);
    *ChP++ = '\0';
    Position++;
-   return Sym = LookUp(LastW, 1);
+   return LookUp(LastW, 1);
 }
 
 /* Node format:
@@ -658,8 +658,8 @@ void Reduce1(ZNode Z, Symbol L, Rule R) {
          }
       }
    for (; PathP < PathE; PathP++) {
-      unsigned N, W; Vertex V; Node Nd;
-      PP = &PathTab[PathP], Z = PP->Z, P = PP->P; Nd = &NodeTab[Z->Val];
+      unsigned N, W; Vertex V;
+      PP = &PathTab[PathP], Z = PP->Z, P = PP->P;
       N = AddSub(L, P);
       for (W = 0; W < Z->Size; W++) AddN(N, Z->List[W]);
    }
