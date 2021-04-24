@@ -32,7 +32,7 @@ typedef enum { EndT, StarT, ColonT, EqualT, BarT, IdenT, DotT } Lexical;
 
 char *LastW;
 
-#define MAX_CHAR 0x400
+#define MAX_CHAR 0x4000 //(@) Expanded from 0x400 to handle larger grammars.
 static char ChArr[MAX_CHAR], *ChP = ChArr;
 
 static int LINE = 1, ERRORS = 0;
@@ -716,7 +716,7 @@ void FreeTables(void) {
    int N, S, W, Z; Vertex V; ZNode ZN; Node Nd;
    for (N = 0; N < NodeE; N++) {
       Nd = &NodeTab[N];
-      for (S = 0; S < Nd->Subs; S++) FreeSub(Nd->Sub[S]);
+   // for (S = 0; S < Nd->Subs; S++) FreeSub(Nd->Sub[S]); //(@) Not secure against memory corruption.
       free(Nd->Sub);
    }
    free(NodeTab), NodeTab = 0, NodeE = NodeP = 0;

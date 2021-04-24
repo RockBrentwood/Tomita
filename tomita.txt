@@ -1,4 +1,7 @@
 The Tomita Parsing Algorithm (LR(k) with Dynamic Programming)
+comp.theory, comp.compilers, comp.ai.nat-lang
+1993 May 23 18:14:53 PST
+
 A while back (1985) a researcher at CMU, named Masaru Tomita, came out with a small book describing his unique approach to natural language parsing.  The approach involved the combination of several distinctive features:
 (1) The parser was LR(k)-based.
 (2) A compact representation of all possible parses of the given input was returned by the parser.

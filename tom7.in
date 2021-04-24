@@ -1,0 +1,4 @@
+S = a A c | b A d | b B c | a B d.
+A = e.
+B = e.
+a. b. c. d. e.

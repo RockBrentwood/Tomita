@@ -15,15 +15,15 @@ The following files are included:
                 The source code ......... Makefile tom.c
                 Documentation ........... README
                 The Algorithm ........... tomita.txt
-                Sample grammars ......... gram0 gram1 gram2 gram3 gram91
-                Sample parsing table .... gram0.tab
-                Sample input & output ... in out
+                Sample grammars ......... tom*.in
+                Sample parsing tables ... tom*.ex
+                Sample input & output ... tom2x.in tom2x.ex
 The reference, tomita.txt, may also be found in the comp.compilers archives from May 1993.
 
-The file gram0.tab was created with the command line:
-                   tom -c gram0 >gram0.tab
-and typing an empty line to terminate parsing.  The file "out" was created with the command line:
-                   tom -s gram0 <in >out
+The file tom2.ex was created with the command line:
+                   tom -c tom2.in >tom2.ex
+and typing an empty line to terminate parsing; similarly for the other files tom*.ex.  The file "tom2x.ex" was created with the command line:
+                   tom -s tom2.in <tom2x.in >tom2x.ex
 
 (1) Command line arguments
 The command line has the following format:
@@ -34,11 +34,11 @@ The listed file, "grammar", should contain a grammar listed in a form suitable f
 Parses are accepted from standard input and the results are displayed to standard output.
 
 Example:
-                      tom -s gram0 <in >out
-will process the grammar listed in "gram0", read input from "in" and produce a listing of the parse results and parse stacks to the file "out".
+                      tom -s tom2.in <tom2x.in >tom2x.ex
+will process the grammar listed in "tom2.in", read input from "tom2x.in" and produce a listing of the parse results and parse stacks to the file "tom2x.ex".
 
 (2) Grammars
-The file gram0 contains a small demo grammar.  In it, you will see rules of the following types:
+The file tom2.in contains a small demo grammar.  In it, you will see rules of the following types:
              (1) Productions, e.g., NP = d n | NP PP.
              (2) Lexical Classificatiom Rules, e.g., p: in with.
              (3) Start Symbol Declaration, * S.
@@ -63,17 +63,17 @@ Sample files are included with this program.
 
 (4) Output Format
 (a) Parsing Tables
-With the -c option, the LR(0) parsing table will be listed in standard output before parsing the input.  The reason for this option is that the parsing stack makes reference to parsing states, so this listing is provided as a cross-reference.  The parsing table for the file gram0 is listed in gram0.tab.  The listing consists of the following:
+With the -c option, the LR(0) parsing table will be listed in standard output before parsing the input.  The reason for this option is that the parsing stack makes reference to parsing states, so this listing is provided as a cross-reference.  The parsing table for the file tom2.in is listed in tom2.ex.  The listing consists of the following:
 
 State:
 	list of items
         ...
-For example, the start state (state 0) in gram0.tab is listed as:
+For example, the start state (state 0) in tom2.ex is listed as:
 0:
 	S => 1
 	NP => 2
 	d => 3
-Items can be of any of the following forms examplified by excerpts from gram0.tab:
+Items can be of any of the following forms examplified by excerpts from tom2.ex:
       (i) ACCEPT
       1:
 	      accept
@@ -88,7 +88,7 @@ This example indicates a shift (or goto) on item "n" from state 3 to state 8.  T
 This indicates that in state 4, a reduction action may be applied whereby the last two items on the parsing stack (which will always be nodes of types PP and NP) are to be combined into a new node of type NP.  A goto on the item NP is then executed from the state located two levels back in the stack to a new state.
 
 (b) Parsing Stack
-The output corresponding to the file "in" (processed using grammar gram0), is listed in "out".  Included in this listing is the following listing of the parsing stack:
+The output corresponding to the file "tom2x.in" (processed using grammar tom2.in), is listed in "tom2x.ex".  Included in this listing is the following listing of the parsing stack:
 
 Parse Stack:
  v_0_0
@@ -120,8 +120,8 @@ then the edge:
 indicates that the parser went from state 7 at position 3 to state 11 at position 5 by shifting an item of type NP parsed from the items: "the girl".  More than one edge may be labeled with the same node.
 
 (b) Parse Forest
-Also in the file "out" is the parse forest corresponding to the input:
+Also in the file "tom2x.ex" is the parse forest corresponding to the input:
                           the boy saw the girl
-processed with grammar gram0.  This forest is listed in equational form as a grammar which can even be input to the parser as a grammar, itself.  This grammar is characterized as the largest sub-grammar of the input grammar that generates the one element set { the input }.  In fact, if this grammar is used to parse the same input, the result will be the same parse forest and parse stack, except for relabeling the nodes and vertices.
+processed with grammar tom2.in.  This forest is listed in equational form as a grammar which can even be input to the parser as a grammar, itself.  This grammar is characterized as the largest sub-grammar of the input grammar that generates the one element set { the input }.  In fact, if this grammar is used to parse the same input, the result will be the same parse forest and parse stack, except for relabeling the nodes and vertices.
 
 What this illustrates, among other things, is that this algorithm is actually a special case of a more general algorithm that computes the intersection of a context free grammar with a regular grammar.

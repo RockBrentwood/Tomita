@@ -5,8 +5,31 @@
 		https://compilers.iecc.com/comparch/article/93-05-108
 1994/02/20	1994 version
 		https://staff.csie.ncu.edu.tw/chia/Course/Compiler/lexparse.html
+		Additional correction to tom.c, marked "(@)", ret-conned into the 1994 version (2021/04/11).
 2001/10/20	Reverted gram3 back to the 1993 version
 		Combined readme and tom.doc, integrating readme into section (9) of tom.doc and renamed the result README.
 		Renamed book Refs.txt and added the (1994) comp.compilers link to it.
 		Minor changes to tom.c (removing unused variables).
 		Renamed tomita.ref tomita.txt and changed README to reflect this.
+		Additional corrections to tom.c, marked "(@)", ret-conned into the 2001 version (2021/04/24).
+2001/10/20	Renamed gram{0,1,2,3,91} → tom{2,3,4,5,6}.in
+		Renamed gram0.tab → tom2.ex
+		Renamed {in,out} → tom2x.{in,ex}
+		Added → tom{0,1,7,8}.in
+		Added → tom{0,1,3,4,5,6,7,8}.ex
+		In the actual timeline, the files were modified as:
+		2001/10/20:
+		∙	Renamed gram* → iTom*.txt
+		∙	Added iTom{0,1,7,8}.txt
+		∙	Renamed {in,out} → Tom{In2,Out2x}.txt
+		∙	Renamed gram0.tab → TomOut2.txt
+		2012/02/24:
+		∙	Renamed iTom*.txt → In*.txt
+		∙	Renamed TomOut2.txt → Out2.txt
+		∙	Added Out{0,1,3,4,5,6,7,8}.txt
+		2018/04/20:
+		∙	Renamed In*.txt → Tom*.in
+		∙	Renamed Out*.txt → Tom*.ex
+		∙	Renamed Tom{In2,Out2x}.txt → Tom2x.{in,ex}
+		2021/04/24:
+		∙	Renamed Tom*.{in,ex} → tom*.{in,ex}
