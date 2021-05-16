@@ -1,12 +1,15 @@
-#The compiler to use
+## The compiler and compiler flags to use.
+CFLAGS = -std=gnu99
 CC = gcc
+#CFLAGS =
 #CC = qcl
- 
-# OBJECT FILE SUFFIX
+
+## The file extensions. 
+## Object File Suffix
 O = .o
 #O = .obj
  
-# EXECUTABLE FILE SUFFIX
+## Executable File Suffix
 X =
 #X = .exe
  
@@ -14,4 +17,8 @@ X =
  
 all:	tom$X
 tom$X:	tom$O
-	$(CC) -o tom tom$O
+	$(CC) $(CFLAGS) -o tom tom$O
+clean:
+	rm -f *$O
+clobber: clean
+	rm -f tom$X

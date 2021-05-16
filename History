@@ -3,15 +3,20 @@
 		http://www.cs.cmu.edu/~gap/junk/
 		https://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/parsing/tom/
 		https://compilers.iecc.com/comparch/article/93-05-108
+1993/10/03	alt.sources
+		https://groups.google.com/g/alt.sources/c/R4A5tDso_IY/m/0NhPKUwvDLsJ
 1994/02/20	1994 version
 		https://staff.csie.ncu.edu.tw/chia/Course/Compiler/lexparse.html
 		Additional correction to tom.c, marked "(@)", ret-conned into the 1994 version (2021/04/11).
+1995/12/08	Saved in the comp.compilers archive
+		ftp://ftp://ftp.iecc.com/pub/file/tomita.tar.gz
 2001/10/20	Reverted gram3 back to the 1993 version
 		Combined readme and tom.doc, integrating readme into section (9) of tom.doc and renamed the result README.
 		Renamed book Refs.txt and added the (1994) comp.compilers link to it.
 		Minor changes to tom.c (removing unused variables).
 		Renamed tomita.ref tomita.txt and changed README to reflect this.
 		Additional corrections to tom.c, marked "(@)", ret-conned into the 2001 version (2021/04/24).
+		Split off LR.c (actually in 1994)
 2001/10/20	Renamed gram{0,1,2,3,91} → tom{2,3,4,5,6}.in
 		Renamed gram0.tab → tom2.ex
 		Renamed {in,out} → tom2x.{in,ex}

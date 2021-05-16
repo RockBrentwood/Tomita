@@ -13,7 +13,7 @@ To install this software, make sure you have an ANSI-C compiler.  Edit the Makef
 
 The following files are included:
                 The source code ......... Makefile tom.c
-                Documentation ........... README
+                Documentation ........... tomita.txt README
                 The Algorithm ........... tomita.txt
                 Sample grammars ......... tom*.in
                 Sample parsing tables ... tom*.ex

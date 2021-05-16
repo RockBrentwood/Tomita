@@ -1,15 +1,27 @@
-comp.compilers archives now at FTP site
-iecc.com:pub/files/tomita.tar.gz
+The 1986 Tomita reference:
+Masaru Tomita, Efficient Parsing for Natural Language: A Fast Algorithm for Practical Systems, Springer (1986)
+https://link.springer.com/book/10.1007%2F978-1-4757-1885-0
+https://link.springer.com/content/pdf/bbm%3A978-1-4757-1885-0%2F1.pdf
 
+The 1991 compilation:
 Kluwer '91, _Generalized LR Parsing_, Tomita ed., 0-7923-9201-9
 
-This book started out as part of the proceedings of the 1st int'l
-workshop on parsing technologies in '89 and then grew. It contains
-some performance studies, some related algorithms, and 2 fixes to
-Tomita: one reduces (or claims to reduce) the time bound to O(n^3)
-regardless of the grammar - the original version was O(n^k) where k is
-the length of the longest production, I think; one is a treatment of
-cyclicity and so on. I'm not positive they're compatible; the book
-arrived as I ended that project so it got read but not closely.
+This book started out as part of the proceedings of the 1st int'l workshop on parsing technologies in '89 and then grew.
+It contains some performance studies, some related algorithms, and 2 fixes to Tomita:
+one reduces (or claims to reduce) the time bound to O(n^3) regardless of the grammar -
+the original version was O(n^k) where k is the length of the longest production, I think;
+one is a treatment of cyclicity and so on.
+I'm not positive they're compatible; the book arrived as I ended that project so it got read but not closely.
 
 stephen
+
+Our implementation:
+The 1993 version:
+1993/05/23	comp.compilers (Article) https://compilers.iecc.com/comparch/article/93-05-108
+1995/12/08	Saved in the comp.compilers archive
+		ftp://ftp://ftp.iecc.com/pub/file/tomita.tar.gz
+
+Application:
+http://www.asel.udel.edu/icslp/cdrom/vol3/089/a089.pdf
+Per Olav Heggtveit, _A Generalized LR Parser for Text-to-Speech Synthesis_
+Rewritten in C++, expanded to include handling for attributes and scaled up to handle large lexicons.
